@@ -6,7 +6,7 @@ cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. The r
 
 ## Example
 
-![Rainbows](http://veratic.us/T6e5)
+![Rainbows](http://f.cl.ly/items/3X0W2c2h3b2l1w2F0H0b/rainbow.png)
 
 The above image contains a ciphertext! It was inserted there using cryptolalia to do the following:
 
