@@ -6,42 +6,46 @@ module Cryptolalia
 
     ### Steganography PNG cipher (http://en.wikipedia.org/wiki/Steganography)
     #
-    # Hide your plaintext in the PNG image of your choice! Note that for this cipher, the output ciphertext is always true:
-    # you'll need to set output_file to redirect the created image to a file.
-    #
-    ### Usage
-    #
-    ## Required
-    # file - the image in which to encode the cipher.
-    # output_file - the name of the file to save the encoded image to.
-    #
-    ## Optional
-    # encode_in - how to encode the cipher in the image. Either :comment (and the plaintext is hidden as a comment on the
-    #             image) or :lsb (the plaintext is encoded among the least-significant bytes of the image). Note that for
-    #             :lsb, if the plaintext is too long, the image will not resemble the original image very well at all.
-    #             (Default: :lsb)
+    # Hide your plaintext in the PNG image of your choice! Afterwards, the image quality will probably be a little worse
+    # (in the case of lsb) or the image size larger (in the case of comments).
     #
     class Steganography < Cipher
-      required_attr :file
-      required_attr :output_file
-      optional_attr :encode_in, :lsb
+      required_attr :file, for: :all
 
+      ### Encoding Usage
+      #
+      # After successful encoding, only true is returned. The encoded image is directly output onto the filesystem at the
+      # location of the output_file attribute.
+      #
+      ## Required
+      # file - the image in which to encode the cipher.
+      # output_file - the name of the file to save the encoded image to.
+      #
+      ## Optional
+      # encoded_in - how to encode the cipher in the image. Either :comment (and the plaintext is hidden as a comment on the
+      #              image) or :lsb (the plaintext is encoded among the least-significant bytes of the image). Note that for
+      #              :lsb, if the plaintext is too long, the image will not resemble the original image very well at all.
+      #              (Default: :lsb)
+      #
+      required_attr :output_file, for: :encoding
+      required_attr :plaintext, for: :encoding
+      optional_attr :encoded_in, default: :lsb, for: :encoding
       attr_accessor :plaintext_position
 
       def perform_encode!
-        raise Cryptolalia::Errors::NotEncodable, "No encoder #{self.encode_in} found" unless self.respond_to?(self.encode_in)
+        raise Cryptolalia::Errors::NotEncodable, "No encoder #{self.encoded_in} found" unless self.respond_to?("encode_#{self.encoded_in}")
 
-        self.send(self.encode_in)
+        self.send("encode_#{self.encoded_in}")
 
         true
       end
 
-      def comment
+      def encode_comment
         png.metadata['Comment'] = self.plaintext
         png.save(self.output_file)
       end
 
-      def lsb
+      def encode_lsb
         @plaintext_position = 0
 
         (0..7).each do |bit|
@@ -66,6 +70,49 @@ module Cryptolalia
             end
 
             png[x, y] = ChunkyPNG::Color.rgba(*bits.collect {|b| b.to_i(2)})
+          end
+        end
+      end
+
+      ### Decoding Usage
+      #
+      # Note that decoding lsb is likely to generate a lot of non-text information. It's up to you to sort the actual
+      # message out from all the noise. (Hint: if there is one, it should be towards the beginning.)
+      #
+      ## Required
+      # file - the image in which the cipher is encoded.
+      # encoded_in - how to cipher was encoded in the image. Either :comment (and the plaintext is hidden as a comment on the
+      #              image) or :lsb (the plaintext is encoded among the least-significant bytes of the image).
+      #
+      required_attr :encoded_in, for: :decoding
+      attr_accessor :message_bits
+
+      def perform_decode!
+        raise Cryptolalia::Errors::NotDecodable, "No decoder #{self.encoded_in} found" unless self.respond_to?("decode_#{self.encoded_in}")
+
+        self.send("decode_#{self.encoded_in}")
+      end
+
+      def decode_comment
+        png.metadata['Comment']
+      end
+
+      def decode_lsb
+        self.message_bits = ''
+
+        (0..7).each do |bit|
+          decode_in_bit(bit)
+        end
+
+        self.plaintext = self.message_bits.scan(/.{8}/).collect {|b| b.to_i(2)}.pack('c*')
+      end
+
+      def decode_in_bit(bit = 0)
+        png.width.times do |x|
+          png.height.times do |y|
+            bytes = ChunkyPNG::Color.to_truecolor_alpha_bytes(png[x, y])
+            bits = bytes.collect {|b| b.to_s(2).rjust(8, '0')}
+            bits.each {|b| self.message_bits << b[-bit - 1]}
           end
         end
       end

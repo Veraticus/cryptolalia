@@ -8,27 +8,44 @@ module Cryptolalia
   # plaintext - the source text that the cipher will transform into the ciphertext.
   #
   class Cipher
-    @@required_attrs = Hash.new {|h, k| h[k] = [:plaintext]}
-    @@optional_attrs = Hash.new {|h, k| h[k] = []}
+    @@attributes = {
+      required: {
+        encoding: Hash.new {|h, k| h[k] = []},
+        decoding: Hash.new {|h, k| h[k] = []}
+      },
+      optional: {
+        encoding: Hash.new {|h, k| h[k] = []},
+        decoding: Hash.new {|h, k| h[k] = []}
+      }
+    }
 
     attr_accessor :plaintext, :ciphertext
 
     # Validate that required attributes are present.
-    def validate!
-      @@required_attrs[self.class.shortname].each do |attr_name|
+    def validate!(type)
+      @@attributes[:required][type][self.class.shortname].each do |attr_name|
         raise Cryptolalia::Errors::AttributeMissing, "Missing required attribute #{attr_name}" if self.send(attr_name).nil?
       end
     end
 
-    # Before encoding, ensure that validate! is called.
+    # Before encoding or decoding, ensure that validate! is called.
     def encode!
-      validate!
+      validate!(:encoding)
       @ciphertext = perform_encode!
     end
 
-    # Clean the plaintext for ciphering, downcasing it and removing punctuation.
+    def decode!
+      validate!(:decoding)
+      @plaintext = perform_decode!
+    end
+
+    # Clean the plaintext and ciphertext, downcasing it and removing punctuation.
     def cleaned_plaintext
       plaintext.downcase.gsub(/[^a-zA-Z0-9\s]/, '')
+    end
+
+    def cleaned_ciphertext
+      ciphertext.downcase.gsub(/[^a-zA-Z0-9\s]/, '')
     end
 
     class << self
@@ -37,23 +54,26 @@ module Cryptolalia
       end
 
       [:required, :optional].each do |attr_type|
-        define_method("#{attr_type}_attrs=") do |attrs|
-          hash = self.class_variable_get("@@#{attr_type}_attrs")
-          hash[shortname] = attrs
-          self.class_variable_set("@@#{attr_type}_attrs", hash)
+        define_method("#{attr_type}_attrs=") do |type, attrs|
+          @@attributes[attr_type][type][self.shortname] = attrs
         end
 
-        define_method("#{attr_type}_attrs") do
-          self.class_variable_get("@@#{attr_type}_attrs")[self.shortname]
+        define_method("#{attr_type}_attrs") do |type|
+          @@attributes[attr_type][type][self.shortname]
         end
 
-        define_method("#{attr_type}_attr") do |attr_name, default = nil|
+        define_method("#{attr_type}_attr") do |attr_name, opts = {}|
+          opts[:for] = Array(opts[:for])
+          opts[:for] = [:encoding, :decoding] if opts[:for] == [:all]
+
           attr_accessor(attr_name)
 
-          self.send("#{attr_type}_attrs=", [self.send("#{attr_type}_attrs"), attr_name].flatten.uniq)
+          opts[:for].each do |type|
+            self.send("#{attr_type}_attrs=", type, [self.send("#{attr_type}_attrs", type), attr_name].flatten.uniq)
+          end
 
           define_method(attr_name) do
-            self.instance_variable_get("@#{attr_name}".to_sym) || default
+            self.instance_variable_get("@#{attr_name}".to_sym) || opts[:default]
           end
 
         end

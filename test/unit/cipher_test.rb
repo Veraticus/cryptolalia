@@ -3,8 +3,9 @@ require 'test_helper'
 class CipherTest < MiniTest::Test
 
   class NotCipher < Cryptolalia::Cipher
-    required_attr :needed
-    optional_attr :fun, true
+    required_attr :plaintext, for: :all
+    required_attr :needed, for: [:encoding, :decoding]
+    optional_attr :fun, default: true, for: :all
 
     def encode!
       self.plaintext
@@ -29,11 +30,11 @@ class CipherTest < MiniTest::Test
     assert @cipher.respond_to?(:plaintext=)
 
     assert_raises Cryptolalia::Errors::AttributeMissing do
-      @cipher.validate!
+      @cipher.validate!(:encoding)
     end
 
     @cipher.plaintext = "Hello, darling."
-    @cipher.validate!
+    @cipher.validate!(:encoding)
   end
 
   def test_cleans_plaintext_by_downcasing_and_removing_punctuation

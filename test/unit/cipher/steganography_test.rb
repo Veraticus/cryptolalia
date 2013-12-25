@@ -11,7 +11,7 @@ class StegnanographyTest < MiniTest::Test
     temp = Tempfile.new('output.png')
 
     @cipher.plaintext = "This was cleverly hidden in an image's comments!"
-    @cipher.encode_in = :comment
+    @cipher.encoded_in = :comment
     @cipher.file = "test/fixtures/sample.png"
     @cipher.output_file = temp.path
     @cipher.encode!
@@ -24,7 +24,7 @@ class StegnanographyTest < MiniTest::Test
     temp = Tempfile.new('output.png')
 
     @cipher.plaintext = "This was cleverly hidden in an image's bits!"
-    @cipher.encode_in = :lsb
+    @cipher.encoded_in = :lsb
     @cipher.file = "test/fixtures/sample.png"
     @cipher.output_file = temp.path
     @cipher.encode!
@@ -50,7 +50,7 @@ class StegnanographyTest < MiniTest::Test
     2000.times do
       @cipher.plaintext << "This was cleverly hidden in an image's bits! "
     end
-    @cipher.encode_in = :lsb
+    @cipher.encoded_in = :lsb
     @cipher.file = "test/fixtures/sample.png"
     @cipher.output_file = temp.path
     @cipher.encode!
@@ -67,5 +67,39 @@ class StegnanographyTest < MiniTest::Test
 
     message = message_bits.scan(/.{8}/).collect {|b| b.to_i(2)}.pack('c*')
     assert message =~ /^This was cleverly hidden in an image's bits!/
+  end
+
+  def test_decodes_comment
+    temp = Tempfile.new('output.png')
+
+    @cipher.plaintext = "This was cleverly hidden in an image's comments!"
+    @cipher.encoded_in = :comment
+    @cipher.file = "test/fixtures/sample.png"
+    @cipher.output_file = temp.path
+    @cipher.encode!
+
+    @new_cipher = Cryptolalia::Cipher::Steganography.new
+    @new_cipher.encoded_in = :comment
+    @new_cipher.file = temp.path
+    @new_cipher.decode!
+
+    assert_equal "This was cleverly hidden in an image's comments!", @new_cipher.plaintext
+  end
+
+  def test_decodes_lsb
+    temp = Tempfile.new('output.png')
+
+    @cipher.plaintext = "This was cleverly hidden in an image's bits!"
+    @cipher.encoded_in = :lsb
+    @cipher.file = "test/fixtures/sample.png"
+    @cipher.output_file = temp.path
+    @cipher.encode!
+
+    @new_cipher = Cryptolalia::Cipher::Steganography.new
+    @new_cipher.encoded_in = :lsb
+    @new_cipher.file = temp.path
+    @new_cipher.decode!
+
+    assert @new_cipher.plaintext =~ /^This was cleverly hidden in an image's bits!/
   end
 end

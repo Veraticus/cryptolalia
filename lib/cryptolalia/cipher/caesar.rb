@@ -5,17 +5,19 @@ module Cryptolalia
     #
     # Good enough for Roman emperors! Turns each letter into another letter a fixed position away from it in the alphabet.
     #
-    ### Usage
-    #
-    ## Required
-    # rot - the distance to rotate through the alphabet.
-    #
-    ## Optional
-    # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
-    #
     class Caesar < Cipher
-      required_attr :rot
-      optional_attr :alphabet, ('a'..'z').to_a
+      required_attr :rot, for: :all
+      optional_attr :alphabet, default: ('a'..'z').to_a, for: :all
+
+      ### Encoding Usage
+      #
+      ## Required
+      # rot - the distance to rotate through the alphabet.
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
+      #
+      required_attr :plaintext, for: :encoding
 
       def perform_encode!
         ciphertext = ''
@@ -34,6 +36,27 @@ module Cryptolalia
         ciphertext.strip
       end
 
+      ### Decoding Usage
+      #
+      ## Required
+      # rot - the distance to rotate through the alphabet.
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
+      #
+      required_attr :ciphertext, for: :decoding
+
+      def perform_decode!
+        original_ciphertext = self.plaintext = self.ciphertext
+        original_rot = self.rot
+        self.rot = -self.rot
+
+        result = perform_encode!
+
+        self.ciphertext = original_ciphertext
+        self.rot = original_rot
+        result
+      end
     end
   end
 end

@@ -4,37 +4,72 @@ Are you envious of your hacker friends, government entities, and corporate spies
 
 cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. The resulting ciphertexts are secure through obscurity -- a dedicated person with enough time could probably crack your codes, using some combination of frequency analysis, crypto knowledge, and good research, but it'll take them awhile.
 
-## Example
+## Encoding Example
 
-![Rainbows](http://f.cl.ly/items/3X0W2c2h3b2l1w2F0H0b/rainbow.png)
+![Rainbows](http://f.cl.ly/items/2D0N2H0Z2T3M0R3J3p0X/rainbow.png)
 
-The above image contains a ciphertext! It was inserted there using cryptolalia to do the following:
+The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:
 
-1. The plaintext ("secrets are fun") was transformed with a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
+1. The plaintext ("secrets are fun") was transformed with a Pollux Morse-code cipher:
+
+```ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.plaintext = 'secrets are fun'
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.encode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+```
+
+1. The result of the Pollux cipher is fed into a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
 
 ```ruby
 beale = Cryptolalia::Cipher::Beale.new
+beale.plaintext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
 beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
-beale.plaintext = 'secrets are fun'
-beale.encode! # "1009 1041 855 422 594 744 1100 614 405 187 282 1088 1107"
+beale.encode! # "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
 ```
 
-2. The result of the Beale cipher ("1009 1041 855 422 594 744 1100 614 405 187 282 1088 1107") is fed into an atbash inversion cipher with an alphabet of all numbers from 0 to 10000:
-
-```ruby
-atbash = Cryptolalia::Cipher::Atbash.new
-atbash.alphabet = (0..10000).to_a.collect(&:to_s)
-atbash.encode! # "999910000100009991 99991000099969999 999299959995 999699989998 999599919996 999399969996 999999991000010000 999499999996 9996100009995 999999929993 999899929998 99991000099929992 99999999100009993"
-```
-
-3. The result of the Atbash cipher ("999910000100009991 99991000099969999 999299959995 999699989998 999599919996 999399969996 999999991000010000 999499999996 9996100009995 999999929993 999899929998 99991000099929992 99999999100009993") is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
+3. The result of the homophonic substitution cipher is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
 
 ```ruby
 steg = Cryptolalia::Cipher::Steganography.new
+steg.plaintext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
 steg.file = "test/fixtures/sample.png"
-steg.encode_in = :lsb
+steg.encoded_in = :lsb
 steg.output_file = File.open('rainbow.png', 'w+')
 steg.encode! # true, see the file above
+```
+
+Don't believe me? You can decode it yourself, also using cryptolalia:
+
+1. Download the file above (rainbow.png) locally and decipher it with the steganographic PNG decipherer:
+
+```ruby
+steg = Cryptolalia::Cipher::Steganography.new
+steg.file = 'rainbow.png'
+steg.encoded_in = :lsb
+steg.decode! # A very very long string, starting with: "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+```
+
+2. Insert the numbers of the Beale homophonic substitution cipher back in:
+
+```ruby
+beale = Cryptolalia::Cipher::Beale.new
+beale.ciphertext = "917 574 917 978 254 366 1016 1111 601 99 860 872 1197 1225 1259 692 308 305 667 1217 913 10 1235 61 415 12 690 1267 1138 794 1061 794 1287 819 960 1068 580 1246 1040 594 837 754 518 1048"
+beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
+beale.decode! # "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+```
+
+3. And finally, plug it right back into the Pollux cipher:
+
+```ruby
+pollux = Cryptolalia::Cipher::Pollux.new
+pollux.ciphertext = "ccchagfadbgafcgbgficbaiadiadbgbgccfbhbbegfai"
+pollux.dot = ['a', 'b', 'c']
+pollux.dash = ['d', 'e', 'f']
+pollux.seperator = ['g', 'h', 'i']
+pollux.decode! # "secretsarefun"
 ```
 
 ## Ciphers

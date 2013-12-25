@@ -4,14 +4,15 @@ module Cryptolalia
     ### The Atbash inversion cipher (http://en.wikipedia.org/wiki/Atbash)
     #
     # This cipher reverses each letter of the plaintext's order in the target alphabet.
-    #
-    ### Usage
-    #
-    ## Optional
-    # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
-    #
     class Atbash < Cipher
-      optional_attr :alphabet, ('a'..'z').to_a
+      optional_attr :alphabet, default: ('a'..'z').to_a, for: [:encoding, :decoding]
+
+      ### Encoding Usage
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
+      #
+      required_attr :plaintext, for: :encoding
 
       def perform_encode!
         ciphertext = ''
@@ -28,6 +29,22 @@ module Cryptolalia
         end
 
         ciphertext.strip
+      end
+
+      ### Decoding Usage
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
+      #
+      required_attr :ciphertext, for: :decoding
+
+      def perform_decode!
+        original_ciphertext = self.plaintext = self.ciphertext
+
+        result = perform_encode!
+
+        self.ciphertext = original_ciphertext
+        result
       end
     end
   end

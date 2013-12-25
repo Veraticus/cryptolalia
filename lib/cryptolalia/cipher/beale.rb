@@ -7,19 +7,21 @@ module Cryptolalia
     # text. For each letter of the plaintext, a word from the file is selected with the same first letter: its positional
     # number in the text is added to the ciphertext.
     #
-    ### Usage
-    #
-    ## Required
-    # file - the text source for the cipher.
-    #
-    ## Optional
-    # only_first_word - whether the cipher should always choose the first word, or any random word. (Default: false)
-    # nth_letter - which letter of the word should be chosen for the ciphertext. (Default: 1)
-    #
     class Beale < Cipher
-      required_attr :file
-      optional_attr :only_first_word, false
-      optional_attr :nth_letter, 1
+      required_attr :file, for: :all
+      optional_attr :only_first_word, default: false, for: :all
+      optional_attr :nth_letter, default: 1, for: :all
+
+      ### Encoding Usage
+      #
+      ## Required
+      # file - the text source for the cipher.
+      #
+      ## Optional
+      # only_first_word - whether the cipher should always choose the first word, or any random word. (Default: false)
+      # nth_letter - which letter of the word should be chosen for the ciphertext. (Default: 1)
+      #
+      required_attr :plaintext, for: :encoding
 
       def perform_encode!
         letters = Hash.new{|h, k| h[k] = []}
@@ -48,6 +50,28 @@ module Cryptolalia
         end
 
         ciphertext.strip
+      end
+
+      ### Decoding Usage
+      #
+      ## Required
+      # file - the text source for the cipher.
+      #
+      ## Optional
+      # only_first_word - whether the cipher should always choose the first word, or any random word. (Default: false)
+      # nth_letter - which letter of the word should be chosen for the ciphertext. (Default: 1)
+      #
+      required_attr :ciphertext, for: :decoding
+
+      def perform_decode!
+        plaintext = ''
+        words = self.source_text.split(' ')
+
+        self.cleaned_ciphertext.split(' ').each do |position|
+          plaintext << words[position.to_i - 1][self.nth_letter - 1]
+        end
+
+        plaintext
       end
 
       def source_text

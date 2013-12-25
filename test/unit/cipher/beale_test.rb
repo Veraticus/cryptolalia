@@ -29,6 +29,14 @@ class BealeTest < MiniTest::Test
     end
   end
 
+  def test_decodes_by_file
+    @cipher.ciphertext = "158 1101 921 799 1063 1009 1005 1260 747 366 205 582 201 1213 13 94 652 649"
+    @cipher.file = "test/fixtures/Declaration\ of\ Independence.txt"
+    @cipher.decode!
+
+    assert_equal 'thisisabiglongtest', @cipher.plaintext
+  end
+
   def text_source_text_cleans_regular_text
     assert @cipher.source_text !~ /[,\.]/
   end

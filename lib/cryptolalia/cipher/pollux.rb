@@ -8,17 +8,7 @@ module Cryptolalia
     # cryptolalia will create its own. After ciphertext generation, use the optional methods :dot, :dash, and :seperator
     # to find out what cryptolalia decided on for those characters.
     #
-    ### Usage
-    #
-    ## Optional
-    # dot - what characters will map to dots. (Default: 10 random UTF-8 characters)
-    # dash - what characters will map to dots. (Default: 10 random UTF-8 characters)
-    # seperator - what characters will map to dots. (Default: 10 random UTF-8 characters)
-    #
     class Pollux < Cipher
-      optional_attr :dot
-      optional_attr :dash
-      optional_attr :seperator
 
       MORSE_ALPHABET = {
         a: '.-',
@@ -49,6 +39,18 @@ module Cryptolalia
         z: '--..'
       }
 
+      ### Encoding Usage
+      #
+      ## Optional
+      # dot - what characters will map to dots. (Default: 10 random UTF-8 characters)
+      # dash - what characters will map to dots. (Default: 10 random UTF-8 characters)
+      # seperator - what characters will map to dots. (Default: 10 random UTF-8 characters)
+      #
+      required_attr :plaintext, for: :encoding
+      optional_attr :dot, for: :encoding
+      optional_attr :dash, for: :encoding
+      optional_attr :seperator, for: :encoding
+
       def perform_encode!
         setup_alphabet!
 
@@ -74,8 +76,45 @@ module Cryptolalia
         ciphertext
       end
 
+      ### Decoding Usage
+      #
+      ## Required
+      # dot - what characters will map to dots.
+      # dash - what characters will map to dots.
+      # seperator - what characters will map to dots.
+      #
+      required_attr :ciphertext, for: :decoding
+      required_attr :dot, for: :decoding
+      required_attr :dash, for: :decoding
+      required_attr :seperator, for: :decoding
+
+      def perform_decode!
+        plaintext = ''
+        current_character = ''
+
+        self.cleaned_ciphertext.split('').each do |char|
+          if self.dot.include?(char)
+            current_character << '.'
+          elsif self.dash.include?(char)
+            current_character << '-'
+          elsif self.seperator.include?(char)
+            plaintext << MORSE_ALPHABET.invert[current_character].to_s
+            current_character = ''
+          else
+            raise Cryptolalia::Errors::NotDecodable, "Could not find a translation for letter #{char}"
+          end
+        end
+
+        plaintext
+      end
+
       def alphabet
         [self.dot, self.dash, self.seperator].flatten.uniq
+      end
+
+      # Any character could potentially be in an alphabet
+      def cleaned_ciphertext
+        ciphertext
       end
 
       private
