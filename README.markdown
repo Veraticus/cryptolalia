@@ -11,19 +11,24 @@ cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. The r
 The above image contains a ciphertext! It was inserted there using cryptolalia to do the following:
 
 1. The plaintext ("secrets are fun") was transformed with a Beale homophonic substitution cipher with the Declaration of Independence as a source text:
+
 ```ruby
 beale = Cryptolalia::Cipher::Beale.new
 beale.file = "test/fixtures/Declaration\ of\ Independence.txt"
 beale.plaintext = 'secrets are fun'
 beale.encode! # "1009 1041 855 422 594 744 1100 614 405 187 282 1088 1107"
 ```
+
 2. The result of the Beale cipher ("1009 1041 855 422 594 744 1100 614 405 187 282 1088 1107") is fed into an atbash inversion cipher with an alphabet of all numbers from 0 to 10000:
+
 ```ruby
 atbash = Cryptolalia::Cipher::Atbash.new
 atbash.alphabet = (0..10000).to_a.collect(&:to_s)
 atbash.encode! # "999910000100009991 99991000099969999 999299959995 999699989998 999599919996 999399969996 999999991000010000 999499999996 9996100009995 999999929993 999899929998 99991000099929992 99999999100009993"
 ```
+
 3. The result of the Atbash cipher ("999910000100009991 99991000099969999 999299959995 999699989998 999599919996 999399969996 999999991000010000 999499999996 9996100009995 999999929993 999899929998 99991000099929992 99999999100009993") is further moved into a steganographic PNG cipher to encode it into the least-significant bits of an image:
+
 ```ruby
 steg = Cryptolalia::Cipher::Steganography.new
 steg.file = "test/fixtures/sample.png"
