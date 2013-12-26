@@ -74,12 +74,12 @@ Bold cipher attributes are required; normal strength are optional.
 
 The [atbash inversion cipher](http://en.wikipedia.org/wiki/Atbash), originally a Hebrew cipher, works just as well in English. It's a simple substitution cipher that encodes the ciphertext by reversing each letter's position in the target alphabet. (So "a" becomes "z", "b" becomes "y", and so on.)
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * alphabet - the alphabet in which to encode the plaintext. (Default: `('a'..'z').to_a`)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * alphabet - the alphabet from which to decode the ciphertext. (Default: `('a'..'z').to_a`)
@@ -88,14 +88,14 @@ The [atbash inversion cipher](http://en.wikipedia.org/wiki/Atbash), originally a
 
 The [Beale homophonic substitution cipher](http://en.wikipedia.org/wiki/Substitution_cipher#Homophonic_substitution) requires an input file in text format. For each letter in the ciphertext, it finds a word in the source text that begins with that letter and adds its position in the source to the ciphertext. Choose something appropriately long and widely-known for your source text, like the Bible, or else no one will ever figure out your cipher.
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * **file** - the file to use as a source for the cipher.
 * only_first_word - whether to always choose the first word with that letter in the source text, or some random word with that letter. (Default: `false`)
 * nth_letter - which letter of the word to use to match to the plaintext to create the ciphertext. (Default: `1`)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * **file** - the file to use as a source for the cipher.
@@ -105,13 +105,13 @@ The [Beale homophonic substitution cipher](http://en.wikipedia.org/wiki/Substitu
 
 The classic [Caesar cipher](http://en.wikipedia.org/wiki/Caesar_cipher) is a simple rotational cipher. Each letter of the plaintext is rotated a constant amount in its alphabet to generate the ciphertext. (So with a rotation of 1, "a" becomes "b", "b" becomes "c", and so on.)
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * **rot** - the distance to rotate through the alphabet.
 * alphabet - the alphabet to use for encoding. (Default: `('a'..'z').to_a`)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * **rot** - the distance to rotate through the alphabet.
@@ -121,14 +121,14 @@ The classic [Caesar cipher](http://en.wikipedia.org/wiki/Caesar_cipher) is a sim
 
 The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=com_content&view=article&id=66&Itemid=76&lang=en) translates each letter of the plaintext into the Morse alphabet -- but instead of only using dots and dashes, multiple possible letters or numbers are used that could translate to dots, dashes, or seperators.
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * dot - the characters to use for dots. (Default: 10 random UTF-8 characters)
 * dash - the characters to use for dashes. (Default: 10 random UTF-8 characters)
 * seperator - the characters to use for seperators. (Default: 10 random UTF-8 characters)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * **dot** - the characters to use for dots. (Default: 10 random UTF-8 characters)
@@ -139,14 +139,14 @@ The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=c
 
 [Steganography](http://en.wikipedia.org/wiki/Steganography) is a technique to embed one message inside another, preferably in a manner that is very difficult to detect. cryptolalia incldues a PNG steganography cipher, that allows encoding or decoding of messages contained in PNG images. It uses one of two methods to do so: either `lsb` (least significant bit), which hides the binary encoding of a message in the least significant bit of every pixel of an image, or `comment`, which hides the message as a comment in the image's metadata.
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * **file** - the image in which to encode the cipher.
 * **output_file** - the location to output the encoded image.
 * encoded_in - the method used to perform encoding, either `:lsb` or `:comment`. (Default: `:lsb`)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **file** - the image in which the cipher is encoded.
 * **encoded_in** - the method used to encode the cipher, either `:lsb` or `:comment`.
@@ -155,13 +155,13 @@ The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=c
 
 [The Vigenere cipher](http://en.wikipedia.org/wiki/Vigenere_cipher) is a essentially a Caesar cipher with a rotation that changes on a per-letter basis. By supplying a keyword, every letter of the plaintext is encoded using a different rotation through its alphabet into the ciphertext.
 
-#### Encoding Usage
+##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * **keyword** - they keyword to use for moving the alphabet.
 * alphabet - the alphabet to use for encoding. (Default: `('a'..'z').to_a`)
 
-#### Decoding Usage
+##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * **keyword** - they keyword used for moving the alphabet.
