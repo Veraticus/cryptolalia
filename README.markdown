@@ -2,7 +2,7 @@
 
 Are you envious of your hacker friends, government entities, and corporate spies who trade fancy codes back and forth using crazy ciphers involving the Hebrew alphabet, the Declaration of Independence, and image steganography? Well, now you too can create fun ciphertexts using extremely esoteric ciphers, all in the ease and comfort of your own console!
 
-cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. A dedicated person with enough time could probably crack your codes, using some combination of frequency analysis, crypto knowledge, and good research, but it'll take them awhile. And hopefully it'll prove entertaining for them.
+cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. A dedicated person with enough time could probably crack your codes, using some combination of frequency analysis, crypto knowledge, and good research. How long it'll take them will probably depend on their cleverness and the obviousness of your ciphers and keys.
 
 ## Encoding Example
 
@@ -119,21 +119,21 @@ The classic [Caesar cipher](http://en.wikipedia.org/wiki/Caesar_cipher) is a sim
 
 ### Pollux
 
-The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=com_content&view=article&id=66&Itemid=76&lang=en) translates each letter of the plaintext into the Morse alphabet -- but instead of only using dots and dashes, multiple possible letters or numbers are used that could translate to dots, dashes, or seperators.
+The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=com_content&view=article&id=66&Itemid=76&lang=en) translates each letter of the plaintext into the Morse alphabet -- but instead of only using dots and dashes, multiple possible letters or numbers are used that could translate to dots, dashes, or separators.
 
 ##### Encoding Usage
 
 * **plaintext** - the plaintext to encode.
 * dot - the characters to use for dots. (Default: 10 random UTF-8 characters)
 * dash - the characters to use for dashes. (Default: 10 random UTF-8 characters)
-* seperator - the characters to use for seperators. (Default: 10 random UTF-8 characters)
+* separators - the characters to use for separators. (Default: 10 random UTF-8 characters)
 
 ##### Decoding Usage
 
 * **ciphertext** - the ciphertext to decode.
 * **dot** - the characters to use for dots. (Default: 10 random UTF-8 characters)
 * **dash** - the characters to use for dashes. (Default: 10 random UTF-8 characters)
-* **seperator** - the characters to use for seperators. (Default: 10 random UTF-8 characters)
+* **separators** - the characters to use for separators. (Default: 10 random UTF-8 characters)
 
 ### Steganography
 
@@ -153,7 +153,7 @@ The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=c
 
 ### Vigenere
 
-[The Vigenere cipher](http://en.wikipedia.org/wiki/Vigenere_cipher) is a essentially a Caesar cipher with a rotation that changes on a per-letter basis. By supplying a keyword, every letter of the plaintext is encoded using a different rotation through its alphabet into the ciphertext.
+The [Vigenere cipher](http://en.wikipedia.org/wiki/Vigenere_cipher) is a essentially a Caesar cipher with a rotation that changes on a per-letter basis. By supplying a keyword, every letter of the plaintext is encoded using a different rotation through its alphabet into the ciphertext.
 
 ##### Encoding Usage
 
@@ -169,7 +169,7 @@ The [Pollux Morse code cipher](http://www.cryptool-online.org/index.php?option=c
 
 ## Attribution
 
-The included Declaration of Indepenence file was taken from Project Gutenberg (http://www.gutenberg.org/ebooks/1). It has been altered to include only the text from the document itself, removing the Project Gutenberg copyright notices as allowed by the Project Gutenberg license (http://www.gutenberg.org/wiki/Gutenberg:The_Project_Gutenberg_License).
+The included Declaration of Independence file was taken from Project Gutenberg (http://www.gutenberg.org/ebooks/1). It has been altered to include only the text from the document itself, removing the Project Gutenberg copyright notices as allowed by the Project Gutenberg license (http://www.gutenberg.org/wiki/Gutenberg:The_Project_Gutenberg_License).
 
 ## A Note on Security
 

@@ -5,7 +5,7 @@ module Cryptolalia
     #
     # Use the power of Morse code to hide your message! Translates each character in the plaintext into the Morse
     # alphabet, and then maps it into a random digit from a new alphabet. If you don't supply your own alphabet,
-    # cryptolalia will create its own. After ciphertext generation, use the optional methods :dot, :dash, and :seperator
+    # cryptolalia will create its own. After ciphertext generation, use the optional methods :dot, :dash, and :separator
     # to find out what cryptolalia decided on for those characters.
     #
     class Pollux < Cipher
@@ -44,12 +44,12 @@ module Cryptolalia
       ## Optional
       # dot - what characters will map to dots. (Default: 10 random UTF-8 characters)
       # dash - what characters will map to dots. (Default: 10 random UTF-8 characters)
-      # seperator - what characters will map to dots. (Default: 10 random UTF-8 characters)
+      # separator - what characters will map to dots. (Default: 10 random UTF-8 characters)
       #
       required_attr :plaintext, for: :encoding
       optional_attr :dot, for: :encoding
       optional_attr :dash, for: :encoding
-      optional_attr :seperator, for: :encoding
+      optional_attr :separator, for: :encoding
 
       def perform_encode!
         setup_alphabet!
@@ -68,7 +68,7 @@ module Cryptolalia
             end
           end
 
-          ciphertext << self.seperator.sample
+          ciphertext << self.separator.sample
         end
 
         ciphertext
@@ -79,12 +79,12 @@ module Cryptolalia
       ## Required
       # dot - what characters will map to dots.
       # dash - what characters will map to dots.
-      # seperator - what characters will map to dots.
+      # separator - what characters will map to dots.
       #
       required_attr :ciphertext, for: :decoding
       required_attr :dot, for: :decoding
       required_attr :dash, for: :decoding
-      required_attr :seperator, for: :decoding
+      required_attr :separator, for: :decoding
 
       def perform_decode!
         plaintext = ''
@@ -95,7 +95,7 @@ module Cryptolalia
             current_character << '.'
           elsif self.dash.include?(char)
             current_character << '-'
-          elsif self.seperator.include?(char)
+          elsif self.separator.include?(char)
             plaintext << MORSE_ALPHABET.invert[current_character].to_s
             current_character = ''
           else
@@ -107,7 +107,7 @@ module Cryptolalia
       end
 
       def alphabet
-        [self.dot, self.dash, self.seperator].flatten.uniq
+        [self.dot, self.dash, self.separator].flatten.uniq
       end
 
       # Remove all spaces and non-word letters from the target string
@@ -123,7 +123,7 @@ module Cryptolalia
       private
 
       def setup_alphabet!
-        [:dot, :dash, :seperator].each do |kind|
+        [:dot, :dash, :separator].each do |kind|
           next unless self.send(kind).nil?
 
           self.send("#{kind}=", Cryptolalia::Utility.random_alphabet(10, self.alphabet))

@@ -31,7 +31,7 @@ class PolluxTest < MiniTest::Test
     @cipher.ciphertext = "1.accc.ba.caa,13!c,acb.acc.b2!21a!a,ab!acb.1b,333!a12.11.311.c3c,cbc,b!c!2c,2a1a!223.2ab!c!2cb,"
     @cipher.dot = ["a", "b", "c"]
     @cipher.dash = ["1", "2", "3"]
-    @cipher.seperator = ["!", ".", ","]
+    @cipher.separator = ["!", ".", ","]
     @cipher.decode!
 
     assert_equal 'thismessageisnowmorseencoded', @cipher.plaintext
