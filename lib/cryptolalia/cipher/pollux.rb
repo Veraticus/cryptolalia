@@ -56,9 +56,7 @@ module Cryptolalia
 
         ciphertext = ''
 
-        self.plaintext.split('').each do |letter|
-          next if letter =~ /[\s\W]/
-
+        self.cleaned_plaintext.split('').each do |letter|
           morse = MORSE_ALPHABET[letter.downcase.to_sym]
           raise Cryptolalia::Errors::NotEncodable, "Could not find a Morse translation for letter #{letter}" if morse.nil?
 
@@ -110,6 +108,11 @@ module Cryptolalia
 
       def alphabet
         [self.dot, self.dash, self.seperator].flatten.uniq
+      end
+
+      # Remove all spaces and non-word letters from the target string
+      def cleaned_plaintext
+        super.gsub(/[\s\W]/, '')
       end
 
       # Any character could potentially be in an alphabet

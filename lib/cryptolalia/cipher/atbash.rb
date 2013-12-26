@@ -4,6 +4,7 @@ module Cryptolalia
     ### The Atbash inversion cipher (http://en.wikipedia.org/wiki/Atbash)
     #
     # This cipher reverses each letter of the plaintext's order in the target alphabet.
+    #
     class Atbash < Cipher
       optional_attr :alphabet, default: ('a'..'z').to_a, for: [:encoding, :decoding]
 

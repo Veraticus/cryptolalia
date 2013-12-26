@@ -35,8 +35,6 @@ module Cryptolalia
 
         ciphertext = ''
         self.cleaned_plaintext.split('').each do |letter|
-          next if letter =~ /[\s\W]/
-
           possibilities = letters[letter]
           raise Cryptolalia::Errors::NotEncodable, "Could not find a word starting with #{letter}" if possibilities.empty?
 
@@ -80,6 +78,11 @@ module Cryptolalia
             words = f.read
             words.downcase.gsub(/[^a-zA-Z0-9\s]/, '').gsub(/\s+/,' ')
           end
+      end
+
+      # Remove all spaces and non-word letters from the target string
+      def cleaned_plaintext
+        super.gsub(/[\s\W]/, '')
       end
     end
   end

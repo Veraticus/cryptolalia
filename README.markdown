@@ -2,7 +2,7 @@
 
 Are you envious of your hacker friends, government entities, and corporate spies who trade fancy codes back and forth using crazy ciphers involving the Hebrew alphabet, the Declaration of Independence, and image steganography? Well, now you too can create fun ciphertexts using extremely esoteric ciphers, all in the ease and comfort of your own console!
 
-cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. The resulting ciphertexts are secure through obscurity -- a dedicated person with enough time could probably crack your codes, using some combination of frequency analysis, crypto knowledge, and good research, but it'll take them awhile.
+cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. A dedicated person with enough time could probably crack your codes, using some combination of frequency analysis, crypto knowledge, and good research, but it'll take them awhile. And hopefully it'll prove entertaining for them.
 
 ## Encoding Example
 
@@ -10,7 +10,7 @@ cryptolalia is designed to produce fun ciphertext puzzles from plaintexts. The r
 
 The above image contains a ciphertext! It was inserted there using cryptolalia in the following manner:
 
-1. The plaintext ("secrets are fun") was transformed with a Pollux Morse-code cipher:
+1. The plaintext ("secrets are fun") was transformed with a Pollux Morse code cipher:
 
 ```ruby
 pollux = Cryptolalia::Cipher::Pollux.new
@@ -84,6 +84,8 @@ pollux.decode! # "secretsarefun"
 
 ### Steganography
 
+### Vigenere
+
 ## Attribution
 
 The included Declaration of Indepenence file was taken from Project Gutenberg (http://www.gutenberg.org/ebooks/1). It has been altered to include only the text from the document itself, removing the Project Gutenberg copyright notices as allowed by the Project Gutenberg license (http://www.gutenberg.org/wiki/Gutenberg:The_Project_Gutenberg_License).
@@ -92,7 +94,7 @@ The included Declaration of Indepenence file was taken from Project Gutenberg (h
 
 This might seem obvious, but...
 
-cryptolalia is *not* designed to create cryptographically-secure ciphertexts. All of these ciphers are vulnerable. Some are more easy to solve than others, but all of them are eventually solvable. cryptolalia is intended to be used for the creation of interesting puzzles, not to hide your nuclear secrets, so please don't use it for anything serious.
+cryptolalia is **not** designed to create cryptographically-secure ciphertexts. All of these ciphers are vulnerable -- some may be easy to solve and others difficult, but all of them are eventually solvable. cryptolalia is intended to be used for the creation of interesting puzzles, not to hide your nuclear secrets, so please don't use it for anything serious.
 
 ## Copyright
 
