@@ -1,7 +1,7 @@
 module Cryptolalia
   class Cipher
 
-    ### The Atbash inversion cipher (http://en.wikipedia.org/wiki/Atbash)
+    ### The atbash inversion cipher (http://en.wikipedia.org/wiki/Atbash)
     #
     # This cipher reverses each letter of the plaintext's order in the target alphabet.
     #

@@ -56,8 +56,7 @@ module Cryptolalia
       # file - the text source for the cipher.
       #
       ## Optional
-      # only_first_word - whether the cipher should always choose the first word, or any random word. (Default: false)
-      # nth_letter - which letter of the word should be chosen for the ciphertext. (Default: 1)
+      # nth_letter - which letter of the word should be chosen for the plaintext. (Default: 1)
       #
       required_attr :ciphertext, for: :decoding
 

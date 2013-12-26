@@ -7,14 +7,16 @@ module Cryptolalia
     # ciphertext based on repeating the key over and over.
     #
     class Vigenere < Cipher
-      required_attr :alphabet, default: ('a'..'z').to_a, for: :all
+      optional_attr :alphabet, default: ('a'..'z').to_a, for: :all
       required_attr :keyword, for: :all
 
       ### Encoding Usage
       #
       ## Required
-      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
       # keyword - the keyword to use to encode the cipher.
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
       #
       required_attr :plaintext, for: :encoding
 
@@ -44,8 +46,11 @@ module Cryptolalia
       ### Decoding Usage
       #
       ## Required
-      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
       # keyword - the keyword to use to encode the cipher.
+      #
+      #
+      ## Optional
+      # alphabet - the default alphabet to use. (Default: ('a'..'z').to_a)
       #
       required_attr :ciphertext, for: :decoding
 
