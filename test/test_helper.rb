@@ -1,5 +1,4 @@
 require 'minitest/autorun'
-require 'webmock/minitest'
 require 'cryptolalia'
 require "mocha/setup"
 
